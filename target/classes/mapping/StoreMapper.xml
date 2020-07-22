@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.whereplace.mapper.StoreMapper">
+
+    <resultMap id="StoreResultMap" type="com.example.whereplace.entity.Store">
+        <result column="store_id" property="storeId"/>
+        <result column="user_id" property="userId"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="provinces" property="provinces"/>
+        <result column="city" property="city"/>
+        <result column="block" property="block"/>
+        <result column="street" property="street"/>
+        <result column="street_number" property="streetNumber"/>
+        <result column="if_open" property="ifOpen"/>
+        <result column="store_name" property="storeName"/>
+        <result column="store_desc" property="storeDesc"/>
+        <result column="store_photo" property="storePhoto"/>
+        <result column="followers" property="followers"/>
+        <result column="volumes" property="volumes"/>
+    </resultMap>
+
+
+    <resultMap id="GoodsResultMap" type="com.example.whereplace.entity.Goods">
+        <result column="good_id" property="goodId"/>
+        <result column="store_id" property="storeId"/>
+        <result column="good_name" property="goodName"/>
+        <result column="price" property="price"/>
+        <result column="good_desc" property="goodDesc"/>
+        <result column="good_photo" property="goodPhoto"/>
+        <result column="favorites" property="favorites"/>
+        <result column="sales" property="sales"/>
+    </resultMap>
+
+    <parameterMap id="GoodsParameterMap" type="com.example.whereplace.entity.Goods">
+        <parameter property="goodId" resultMap="GoodsResultMap"/>
+        <parameter property="storeId" resultMap="GoodsResultMap"/>
+        <parameter property="goodName" resultMap="GoodsResultMap"/>
+        <parameter property="price" resultMap="GoodsResultMap"/>
+        <parameter property="goodDesc" resultMap="GoodsResultMap"/>
+        <parameter property="goodPhoto" resultMap="GoodsResultMap"/>
+        <parameter property="favorites" resultMap="GoodsResultMap"/>
+        <parameter property="sales" resultMap="GoodsResultMap"/>
+    </parameterMap>
+    <parameterMap id="StoreParameterMap" type="com.example.whereplace.entity.Store">
+        <parameter property="storeId" resultMap="StoreResultMap"/>
+        <parameter property="userId" resultMap="StoreResultMap"/>
+        <parameter property="longitude" resultMap="StoreResultMap"/>
+        <parameter property="latitude" resultMap="StoreResultMap"/>
+        <parameter property="provinces" resultMap="StoreResultMap"/>
+        <parameter property="city" resultMap="StoreResultMap"/>
+        <parameter property="block" resultMap="StoreResultMap"/>
+        <parameter property="street" resultMap="StoreResultMap"/>
+        <parameter property="streetNumber" resultMap="StoreResultMap"/>
+        <parameter property="ifOpen" resultMap="StoreResultMap"/>
+        <parameter property="storeName" resultMap="StoreResultMap"/>
+        <parameter property="storeDesc" resultMap="StoreResultMap"/>
+        <parameter property="storePhoto" resultMap="StoreResultMap"/>
+        <parameter property="followers" resultMap="StoreResultMap"/>
+        <parameter property="volumes" resultMap="StoreResultMap"/>
+    </parameterMap>
+
+
+    <insert id="setStore" useGeneratedKeys="true" keyProperty="storeId" parameterMap="StoreParameterMap">
+        insert into store
+        (
+        user_id
+        ,store_name
+        <if test="storeDesc!=null">
+            ,store_desc
+        </if>
+        <if test="storePhoto!=null">
+            ,store_photo
+        </if>
+        <if test="longitude!=-1">
+            ,longitude
+        </if>
+        <if test="latitude!=-1">
+            ,latitude
+        </if>
+        <if test="provinces!=null">
+            ,provinces
+        </if>
+        <if test="city!=null">
+            ,city
+        </if>
+        <if test="block!=null">
+            ,block
+        </if>
+        <if test="street!=null">
+            ,street
+        </if>
+        <if test="streetNumber!=null">
+            ,street_number
+        </if>
+        )values
+        (
+        #{userId},#{storeName}
+        <if test="storeName!=null">
+            #{storeName}
+        </if>
+        <if test="storeDesc!=null">
+            ,#{storeDesc}
+        </if>
+        <if test="storePhoto!=null">
+            ,#{storePhoto}
+        </if>
+        <if test="longitude!=-1">
+            ,#{longitude}
+        </if>
+        <if test="latitude!=-1">
+            ,#{latitude}
+        </if>
+        <if test="provinces!=null">
+            ,#{provinces}
+        </if>
+        <if test="city!=null">
+            ,#{city}
+        </if>
+        <if test="block!=null">
+            ,#{block}
+        </if>
+        <if test="street!=null">
+            ,#{street}
+        </if>
+        <if test="streetNumber!=null">
+            ,#{streetNumber}
+        </if>
+        )
+    </insert>
+
+    <update id="changeState" parameterMap="StoreParameterMap">
+        update store set
+        if_open=#{ifOpen}
+        <if test="longitude!=-1">
+            , longitude=#{longitude}
+        </if>
+        <if test="latitude!=-1">
+            , latitude=#{latitude}
+        </if>
+        <if test="city!=null">
+            , city=#{city}
+        </if>
+        <if test="block!=null">
+            , block=#{block}
+        </if>
+        <if test="street!=null">
+            , stree=#{street}
+        </if>
+        <if test="streetNumber!=null">
+            , street_number=#{streetNumber}
+        </if>
+        where
+        user_id=#{userId} and store_id=#{storeId}
+    </update>
+
+    <select id="getFavorList"
+            parameterType="java.lang.Long"
+            resultType="java.lang.String">
+        select favor_list_name from favor_list where user_id=#{userId}
+    </select>
+    
+    <insert id="creatFavorList">
+        insert into favor_list (user_id,favor_list_name)values(#{userId},#{favorListName})
+    </insert>
+    
+    <insert id="favorStore">
+        insert into action_favor_store
+        (user_id,store_id,favor_list_name)
+        values
+        (#{userId},#{storeId}
+        <if test="favorListName!=null">,#{favorListName}</if>
+        <if test="favorListName==null">,"默认摊库"</if>)
+    </insert>
+
+    <insert id="storeClassification">
+        insert into action_store_classification
+
+        (store_id,type_name)
+        values
+        (#{storeId},#{typeName})
+    </insert>
+
+
+    <select id="viewMyStore" resultMap="StoreResultMap">
+        select * from store where user_id = #{user_id}
+    </select>
+
+    <select id="viewGoods" resultMap="GoodsResultMap">
+        select * from goods where store_id=#{storeId} <if test="columnName!=null">order by ${columnName}</if>
+    </select>
+
+    <select id="viewFocusGoods" resultMap="GoodsResultMap">
+        select * from goods where good_id
+        in
+        (select good_id from action_focus_good where user_id=#{userId})
+    </select>
+    
+    <insert id="favorGood">
+        insert into action_focus_good (user_id,good_id)values(#{userId},#{goodId})
+    </insert>
+
+    <insert id="commentGood">
+        insert into comment
+        (user_id,good_id,content,`timestamp`)
+        values
+        (#{userId},#{goodId},#{content},#{timestamp})
+    </insert>
+
+    <update id="accountGood" keyProperty="goodId">
+        update goods set sales = sales+1 where good_id=#{goodId}
+    </update>
+    
+    <select id="viewFavorList" resultMap="StoreResultMap">
+        select * from store where store_id
+        in
+        (select store_id from action_favor_store where user_id=#{userId} and favor_list_name=#{favorListName})
+    </select>
+
+    <insert id="publishGood" useGeneratedKeys="true" keyProperty="goodId" parameterMap="GoodsParameterMap">
+        insert into goods
+        (
+        store_id,good_name,price
+        <if test="goodDesc!=null">
+            ,good_desc
+        </if>
+        <if test="goodPhoto!=null">
+            ,good_photo
+        </if>
+        )
+        values
+        (
+        #{storeId},#{goodName},#{price}
+        <if test="goodDesc!=null">
+            ,#{goodDesc}
+        </if>
+        <if test="goodPhoto!=null">
+            ,#{goodPhoto}
+        </if>
+        )
+    </insert>
+
+    <select id="viewStore" resultMap="StoreResultMap">
+        select *
+        <if test="longitude!=-1 and latitude!=-1">
+            ,(st_distance(point(longitude, latitude),point(#{longitude},#{latitude}) ) / 0.0111)
+            AS distance
+        </if>
+        <if test="columnName!=null">where ${columnName}=#{keyValue}</if>
+        FROM store
+        <if test="longitude!=-1 and latitude!=-1">
+            <if test="distance!=-1">
+            HAVING distance&lt;#{distance}
+            </if>
+        order by distance
+        </if>
+    </select>
+
+    <sql id="storeDis">
+        power(power((latitude-#{latitude})*111000,2),power((longtitude-#{longitude})*111000,2))
+    </sql>
+
+    <select id="selectStore" resultMap="StoreResultMap">
+        select * from store where store_id=#{store_id}
+    </select>
+
+
+</mapper>

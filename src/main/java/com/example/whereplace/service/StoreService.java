@@ -30,7 +30,7 @@ public class StoreService {
         String photoUrl=imgToUrl(storePhoto);
         Store store=new Store(userId,longitude,latitude,provinces,city,block,street,streetNumber,storeName,storeDesc,photoUrl);
         storeMapper.setStore(store);
-        return new OutputInformation(0,"",store.getStoreId());
+        return new OutputInformation(0,"",store);
     }
 
 
@@ -104,10 +104,10 @@ public class StoreService {
                 return photoUrl;
                 }catch (IOException e) {
                 e.printStackTrace();
-                return null;
+                return "图片插入失败！";
             }
         }else {
-            return null;
+            return "图片格式不正确";
         }
     }
 

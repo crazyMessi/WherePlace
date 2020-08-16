@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author 19892
  */
@@ -20,11 +22,26 @@ public class UserController {
 
     @RequestMapping(value = "register")
     public OutputInformation register(
-            @RequestParam("userName")String userName,
-            @RequestParam("password")String password
+            HttpServletRequest request,
+            @RequestParam("userName") String userName,
+            @RequestParam("password")String password,
+            @RequestParam("phoneNumber")long phoneNumber
     ) {
         try {
-            return userService.register(userName,password);
+            return userService.register(request,userName,password,phoneNumber);
+        }catch (NullPointerException e){
+            return new OutputInformation(602);
+        }
+    }
+
+    @RequestMapping(value = "verify")
+    public OutputInformation verify(
+            HttpServletRequest request,
+            @RequestParam("code") String code,
+            @RequestParam("phoneNumber")long phoneNumber
+    ){
+        try {
+            return userService.verify(request,code,phoneNumber);
         }catch (NullPointerException e){
             return new OutputInformation(602);
         }

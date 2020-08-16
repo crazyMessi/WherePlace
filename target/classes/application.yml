@@ -8,11 +8,21 @@ spring:
     username: root
     password: root
 
-expireTime: 2592000000
-
 mybatis:
   mapper-locations: classpath:mapping/*Mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+myprops:
+  #token's expireTime(30days)
+  expireTime: 2592000000
 
+  #Aliyun message
+  AccessKeyId: LTAI4GDQbnXaX4hs6LJiN3aC
+
+  AccessKeySecret: Zwl0fcvYHHA9AZyng5MclLT3EXwZzO
+
+  #session's expireTime
+  sessionExpireTime:
+    #the expireTime for register
+   register: 300

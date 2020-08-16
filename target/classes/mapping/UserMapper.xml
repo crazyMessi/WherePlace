@@ -10,16 +10,19 @@
         <result column="user_type" property="userType"/>
     </resultMap>
 
-    <insert id="register"
-            useGeneratedKeys="true" keyProperty="userId">
+    <insert id="register">
         insert into
-        user_information (user_name,password)
-        values (#{userName},#{password})
+        user_information (user_name,password,user_id)
+        values (#{userName},#{password},#{userId})
     </insert>
 
 
-    <select id="login" resultType="java.lang.String">
-        select password from user_information where user_id=#{userId}
+    <select id="login" resultMap="UserinformationResultMap">
+        select * from user_information where user_id=#{userId}
+    </select>
+
+    <select id="checkIfExist" resultType="java.lang.Long">
+        select IFNULL(MAX(user_id),0) AS user_id from user_information where user_id=#{userId}
     </select>
 
 

@@ -97,9 +97,6 @@
         )values
         (
         #{userId},#{storeName}
-        <if test="storeName!=null">
-            #{storeName}
-        </if>
         <if test="storeDesc!=null">
             ,#{storeDesc}
         </if>

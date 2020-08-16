@@ -18,12 +18,23 @@ public interface UserMapper {
      */
     void register(Userinformation userinformation);
 
+
+    /**
+     *注册前的检查工作
+     * @param user_id
+     * @return
+     */
+    long checkIfExist(long user_id);
+
+
     /**
      * 登陆
      * @param userId
      * @return 对应的password
      */
-    String login(long userId);
+    Userinformation login(long userId);
+
+
 
 
 
